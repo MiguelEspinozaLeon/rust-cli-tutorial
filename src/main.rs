@@ -11,39 +11,30 @@ struct Cli {
 #[derive(Debug)]
 struct CustomError(String);
 
-fn main() -> Result<()> {
-    //let pattern = std::env::args().nth(1).expect("no pattern given");
-    //let path = std::env::args().nth(2).expect("no path given");
-    //git
+#[test]
+fn find_a_match() {
+    let mut result = Vec::new();
+    grrs::find_matches("lorem ipsum\ndolor sit amet", "lorem", &mut result);
+    assert_eq!(result, b"lorem ipsum\n");
+}
 
-    /*let args = Cli {
-        pattern,
-        path: std::path::PathBuf::from(path),
-    };*/
+
+fn main() -> Result<()> {
+   
 
     let args = Cli::parse();
 
     let content = std::fs::read_to_string(&args.path).with_context(|| format!("could not read file `{}`", args.path.display()))?;
 
-    /*let content = match result {
-        Ok(content) => {content},
-        Err(error) => {return Err(error.into());}
-    };*/
-
-    for line in content.lines() {
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }
+    grrs::find_matches(&content, &args.pattern, &mut std::io::stdout());
+    
     Ok(())
 
-    /*for line in content.lines()  {
-        if line.contains(&args.pattern) {
-            println!("{}", line);
-        }
-    }*/
-
-    //println!("pattern: {:?}, path: {:?}", args.pattern, args.path);
+   
 }
 
-//todo: implement it using buffreader
+
+
+
+
+
